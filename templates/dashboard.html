@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        #dark-mode-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Dashboard</h1>
+            <span id="dark-mode-toggle">🌓</span>
+        </div>
+        
+        <!-- Metrics Section -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Predictions</h5>
+                        <p class="card-text fs-2">{{ total_predictions }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Feedback Received</h5>
+                        <p class="card-text fs-2">{{ feedback_count }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Users</h5>
+                        <p class="card-text fs-2">{{ active_users }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Sales Trends</h5>
+                        <canvas id="salesTrendsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Category Breakdown</h5>
+                        <canvas id="categoryBreakdownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dark Mode Toggle
+        const toggle = document.getElementById('dark-mode-toggle');
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('bg-dark');
+            document.body.classList.toggle('text-light');
+        });
+
+        // Sales Trends Chart
+        const salesTrendsCtx = document.getElementById('salesTrendsChart').getContext('2d');
+        new Chart(salesTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: {{ dates | safe }}, // Pass dates from Flask
+                datasets: [
+                    {
+                        label: 'Burgers',
+                        data: {{ burgers | safe }},
+                        borderColor: '#FF5733',
+                        fill: false,
+                    },
+                    {
+                        label: 'Pizzas',
+                        data: {{ pizzas | safe }},
+                        borderColor: '#33FF57',
+                        fill: false,
+                    },
+                    {
+                        label: 'Salads',
+                        data: {{ salads | safe }},
+                        borderColor: '#3357FF',
+                        fill: false,
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+        });
+        
+        <div class="row">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Feedback Count</h5>
+                <p class="card-text fs-2">{{ feedback_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Average Rating</h5>
+                <p class="card-text fs-2">{{ average_rating }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        // Category Breakdown Chart
+        const categoryBreakdownCtx = document.getElementById('categoryBreakdownChart').getContext('2d');
+        new Chart(categoryBreakdownCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Burgers', 'Pizzas', 'Salads'],
+                datasets: [
+                    {
+                        data: [{{ total_burgers }}, {{ total_pizzas }}, {{ total_salads }}],
+                        backgroundColor: ['#FF5733', '#33FF57', '#3357FF'],
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            },
+        });
+    </script>
+</body>
+</html>
