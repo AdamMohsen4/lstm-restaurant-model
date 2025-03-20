@@ -107,9 +107,6 @@ Feedback is stored in `feedback.json` in the following format:
 - Implement user authentication for personalized feedback.
 - Enhance the web interface with richer visualizations and dynamic charts.
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
 ## Acknowledgments
 
